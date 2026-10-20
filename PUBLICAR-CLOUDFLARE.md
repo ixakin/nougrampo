@@ -6,13 +6,15 @@ Cloudflare Pages es adecuado para esta web: contiene HTML, CSS, JavaScript e im�
 
 ## Primera publicación
 
-1. Crea la cuenta de Cloudflare y abre **Workers & Pages**.
-2. Crea un proyecto Pages con **Direct Upload** y elige un nombre de proyecto, por ejemplo `nougrampo`.
-3. Sube el contenido de esta carpeta manteniendo la estructura: `index.html`, las páginas HTML, `assets/`, `ca/`, `en/`, `de/`, `styles.css`, `secondary.css`, `script.js`, `_headers` y `404.html`.
-4. No uses un comando de build; si el formulario lo exige, usa `exit 0`. La carpeta de salida es la raíz (`/`).
-5. Abre la URL `*.pages.dev` y comprueba las cinco páginas, los cuatro idiomas, las imágenes, la navegación y el envío de los dos formularios.
+El proyecto ya está en GitHub: [ixakin/nougrampo](https://github.com/ixakin/nougrampo). Para obtener despliegues automáticos:
 
-**Elección de publicación:** Cloudflare indica que un proyecto creado con Direct Upload no se puede convertir después a integración Git. Este repositorio no tiene remoto Git configurado. Si quieres despliegues automáticos cada vez que actualices la web, primero habrá que subir el proyecto a GitHub o GitLab y elegir integración Git desde el principio. Para publicar ahora con menos preparación, Direct Upload es el camino corto.
+1. Crea la cuenta de Cloudflare y abre **Workers & Pages**.
+2. Crea un proyecto Pages y selecciona **Import an existing Git repository**.
+3. Autoriza la conexión con GitHub y elige `ixakin/nougrampo`.
+4. Configura la rama de producción como `main`. No hay framework ni compilación; deja el comando de build vacío o usa `exit 0` si la pantalla lo requiere. La raíz del repositorio contiene el sitio.
+5. Despliega y abre la URL `*.pages.dev`. Comprueba las cinco páginas, los cuatro idiomas, las imágenes, la navegación y el envío de los formularios.
+
+La integración Git desplegará las actualizaciones de `main` automáticamente. Cloudflare también ofrece Direct Upload, pero un proyecto creado con ese método no se puede convertir después a integración Git.
 
 ## Dominio y buscadores
 
@@ -29,7 +31,7 @@ Los formularios apuntan temporalmente a `ixakin@gmail.com` mediante FormSubmit. 
 
 - `_headers` añade cabeceras básicas de seguridad. Cloudflare Pages sirve los archivos estáticos y aplica compresión automáticamente.
 - La página `404.html` proporciona una salida sencilla para URLs que no existen.
-- Conserva una copia local de la carpeta publicada. Para cambios posteriores, vuelve a subir los archivos o migra a integración Git con un proyecto Pages nuevo.
+- Conserva una copia local del proyecto; los cambios enviados a `main` se desplegarán mediante la integración Git.
 
 ## Documentación oficial
 
