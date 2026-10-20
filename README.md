@@ -1,6 +1,6 @@
 # Nou Grampo
 
-Web estática corporativa de Nou Grampo, preparada para publicarse en Cloudflare Pages.
+Web estática corporativa de Nou Grampo, preparada para publicarse como Cloudflare Worker con Static Assets.
 
 Repositorio: [github.com/ixakin/nougrampo](https://github.com/ixakin/nougrampo)
 
@@ -12,7 +12,8 @@ Repositorio: [github.com/ixakin/nougrampo](https://github.com/ixakin/nougrampo)
 - Diseño adaptable, estilos compartidos y recursos gráficos en `assets/`.
 - Formularios en inicio y contacto conectados a FormSubmit. El destinatario está puesto temporalmente en `ixakin@gmail.com`.
 - Página `404.html` y cabeceras web básicas en `_headers`.
-- Guía para publicar en Cloudflare Pages en [`PUBLICAR-CLOUDFLARE.md`](PUBLICAR-CLOUDFLARE.md).
+- Configuración de Workers Static Assets en [`wrangler.jsonc`](wrangler.jsonc), con archivos de documentación excluidos por `.assetsignore`.
+- Guía de publicación en [`PUBLICAR-CLOUDFLARE.md`](PUBLICAR-CLOUDFLARE.md).
 
 ## Estructura
 
@@ -27,18 +28,20 @@ Repositorio: [github.com/ixakin/nougrampo](https://github.com/ixakin/nougrampo)
 ├── secondary.css        # estilos de páginas interiores
 ├── script.js            # comportamiento común y envío AJAX de formularios
 ├── 404.html             # página no encontrada
-└── _headers             # cabeceras de Cloudflare Pages
+├── _headers             # cabeceras HTTP de Cloudflare
+├── wrangler.jsonc       # Worker estático `nougrampo`
+└── .assetsignore        # excluye README y archivos de configuración del despliegue
 ```
 
 ## Desarrollo y publicación
 
-No hay dependencias ni proceso de compilación. La raíz del repositorio es la carpeta pública. Para publicar, conecta este repositorio a un proyecto de Cloudflare Pages con integración Git, rama de producción `main`, comando de compilación vacío y directorio de salida `.`. Cloudflare desplegará automáticamente cada actualización de `main`.
+No hay dependencias ni proceso de compilación. La raíz del repositorio es la carpeta pública. El Worker estático se configura en `wrangler.jsonc`. Conecta este repositorio a Cloudflare Workers Builds, con `main` como rama de producción y el nombre `nougrampo`, y Cloudflare desplegará las actualizaciones automáticamente.
 
 Consulta [`PUBLICAR-CLOUDFLARE.md`](PUBLICAR-CLOUDFLARE.md) para los pasos de despliegue, dominio y formularios.
 
 ## Pendiente antes de publicar
 
-- Crear el proyecto Pages conectado a este repositorio de GitHub y revisar la primera versión desplegada.
+- Conectar el Worker `nougrampo` a este repositorio de GitHub y revisar la primera versión desplegada.
 - Comprobar las páginas, navegación, traducciones, imágenes y diseño en móvil, tablet y escritorio desde la URL `pages.dev`.
 - Probar los formularios desde la web publicada y confirmar el primer mensaje de FormSubmit.
 - Antes de abrir la web al público, cambiar `ixakin@gmail.com` por `info@nougrampo.es` en los formularios de los ocho HTML de inicio y contacto, y confirmar el nuevo destinatario en FormSubmit.

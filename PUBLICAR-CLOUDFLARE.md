@@ -1,41 +1,33 @@
-# Publicar Nou Grampo en Cloudflare Pages
+# Publicar Nou Grampo en Cloudflare Workers
 
-## Recomendación
+## Configuración preparada
 
-Cloudflare Pages es adecuado para esta web: contiene HTML, CSS, JavaScript e imágenes estáticas y no necesita un servidor ni un paso de compilación. La guía oficial admite proyectos HTML sin framework y la carpeta publicada será la raíz de este proyecto.
+Este repositorio usa Workers Static Assets. El archivo `wrangler.jsonc` configura el Worker `nougrampo` y sirve el contenido estático desde la raíz, sin ejecutar código dinámico. `_headers` establece las cabeceras web y `.assetsignore` evita publicar los archivos de documentación y configuración.
 
-## Primera publicación
+Las peticiones a los recursos estáticos se sirven gratuitamente en Workers Free. [Precios y límites de Static Assets](https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/)
 
-El proyecto ya está en GitHub: [ixakin/nougrampo](https://github.com/ixakin/nougrampo). Para obtener despliegues automáticos:
+## Conectar GitHub y desplegar
 
-1. Crea la cuenta de Cloudflare y abre **Workers & Pages**.
-2. Crea un proyecto Pages y selecciona **Import an existing Git repository**.
-3. Autoriza la conexión con GitHub y elige `ixakin/nougrampo`.
-4. Configura la rama de producción como `main`. No hay framework ni compilación; deja el comando de build vacío o usa `exit 0` si la pantalla lo requiere. La raíz del repositorio contiene el sitio.
-5. Despliega y abre la URL `*.pages.dev`. Comprueba las cinco páginas, los cuatro idiomas, las imágenes, la navegación y el envío de los formularios.
+1. En Cloudflare, abre **Workers & Pages** y elige **Create application** > **GitHub**.
+2. Autoriza la aplicación de Cloudflare en GitHub con acceso solo al repositorio `ixakin/nougrampo`.
+3. Selecciona el repositorio y la rama `main`.
+4. Usa el nombre de Worker `nougrampo`, que debe coincidir con `name` en `wrangler.jsonc`.
+5. No configures un comando de build; no se usa framework ni compilación. El despliegue usará Wrangler y los ajustes del archivo `wrangler.jsonc`.
+6. Despliega y comprueba la URL `nougrampo.<subdominio-de-la-cuenta>.workers.dev` que muestre Cloudflare. Si la cuenta usa `ixakin.workers.dev` y el nombre está libre, será `nougrampo.ixakin.workers.dev`.
 
-La integración Git desplegará las actualizaciones de `main` automáticamente. Cloudflare también ofrece Direct Upload, pero un proyecto creado con ese método no se puede convertir después a integración Git.
+Cloudflare Workers Builds puede conectar el repositorio y publicar las actualizaciones de `main` automáticamente. [Integración GitHub](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/)
 
-## Dominio y buscadores
+## Comprobaciones posteriores
 
-- Cuando decidas el dominio final, añádelo en **Custom domains** dentro del proyecto Pages. Cloudflare configura el DNS de la zona alojada en esa misma cuenta; si el dominio está en otro proveedor, habrá que seguir el método de conexión que indique el panel.
-- Después de elegir el dominio, generar `sitemap.xml` con las URLs definitivas y publicarlo junto a `robots.txt`. No se incluye un sitemap con dominios ficticios.
-- Añade el sitio a Google Search Console con el dominio final y envía el sitemap.
-- Configura Google Analytics cuando tengas el ID de medición. No se ha añadido un ID de ejemplo para evitar registrar visitas en una propiedad ajena.
-
-## Formularios
-
-Los formularios apuntan temporalmente a `ixakin@gmail.com` mediante FormSubmit. La primera prueba requiere que la página esté publicada en una URL HTTP/HTTPS y que se confirme el correo inicial de FormSubmit. Antes del lanzamiento público, cambia el destinatario a `info@nougrampo.es` y confirma también ese buzón.
-
-## Notas
-
-- `_headers` añade cabeceras básicas de seguridad. Cloudflare Pages sirve los archivos estáticos y aplica compresión automáticamente.
-- La página `404.html` proporciona una salida sencilla para URLs que no existen.
-- Conserva una copia local del proyecto; los cambios enviados a `main` se desplegarán mediante la integración Git.
+- Revisar las páginas, los idiomas, imágenes y navegación en móvil y escritorio desde la URL publicada.
+- Probar los formularios en la web publicada y confirmar el primer mensaje de FormSubmit.
+- Antes del lanzamiento público, cambiar el destinatario de `ixakin@gmail.com` a `info@nougrampo.es` en los formularios de inicio y contacto de los cuatro idiomas, y confirmar el buzón en FormSubmit.
+- Cuando haya dominio definitivo, conectarlo al Worker y preparar `sitemap.xml`, `robots.txt`, Google Search Console y Google Analytics.
+- Sustituir los enlaces sociales de ejemplo por las cuentas reales, añadir el mapa de Google Maps y revisar los textos legales y de privacidad.
 
 ## Documentación oficial
 
-- [Desplegar HTML estático](https://developers.cloudflare.com/pages/framework-guides/deploy-anything/)
-- [Carga directa](https://developers.cloudflare.com/pages/get-started/direct-upload/)
-- [Configuración de compilación](https://developers.cloudflare.com/pages/configuration/build-configuration/)
-- [Dominios personalizados](https://developers.cloudflare.com/pages/configuration/custom-domains/)
+- [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)
+- [Desplegar un sitio estático](https://developers.cloudflare.com/workers/static-assets/get-started/)
+- [Configuración de assets y Wrangler](https://developers.cloudflare.com/workers/static-assets/binding/)
+- [Builds de Workers](https://developers.cloudflare.com/workers/ci-cd/builds/)
