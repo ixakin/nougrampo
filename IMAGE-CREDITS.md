@@ -10,5 +10,8 @@ Las siguientes fotografías se descargaron de Unsplash y se guardaron localmente
 | `split.jpg` | “Air Conditioner on Outside Wall” — alpha innotec | [Pexels](https://www.pexels.com/photo/air-conditioner-on-outside-wall-20046692/) |
 | `carousel-bathroom.jpg` | “Modern bathroom with glass-enclosed shower and marble walls” — Smart Renovations | [Unsplash](https://unsplash.com/photos/modern-bathroom-with-glass-enclosed-shower-and-marble-walls-Ies-rhvusTs) |
 | `carousel-clima.jpg` | “Living Room of the Apartment with Air Conditioning” — Thới Nam Cao | [Pexels](https://www.pexels.com/photo/living-room-of-the-apartment-with-air-conditioning-20078063/) |
+| `valor-calidad.jpg` | “A bathroom sink with a gold faucet next to a white bowl” — Tile Merchant Ireland | [Unsplash](https://unsplash.com/photos/a-bathroom-sink-with-a-gold-faucet-next-to-a-white-bowl-VwwGibLTY70) |
+| `valor-asesoramiento.jpeg` | “A real estate agent discusses house plans with a couple in a modern living room setting” — Vitaly Gariev | [Pexels](https://www.pexels.com/photo/couple-and-real-estate-agent-sitting-in-house-23225013/) |
+| `valor-compromiso-local.jpeg` | “Photo of brown, gray, and beige concrete pathway” — Oscar Nord | [Unsplash](https://unsplash.com/photos/photo-of-brown-gray-and-beige-concrete-pathway-LZ34wSVIXDQ) |
 
 Las imágenes se han recortado y reducido desde Unsplash para ajustarse a los espacios de la web.

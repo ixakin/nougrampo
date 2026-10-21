@@ -1,0 +1,9 @@
+.values .service-card{color:#fff;isolation:isolate;overflow:hidden}
+.values .service-card:nth-child(1){background:linear-gradient(0deg,rgba(20,20,19,.84),rgba(20,20,19,.28)),url('../assets/valor-calidad.jpg') center/cover no-repeat}
+.values .service-card:nth-child(2){background:linear-gradient(0deg,rgba(20,20,19,.84),rgba(20,20,19,.28)),url('../assets/valor-asesoramiento.jpeg') center/cover no-repeat}
+.values .service-card:nth-child(3){background:linear-gradient(0deg,rgba(20,20,19,.84),rgba(20,20,19,.28)),url('../assets/valor-compromiso-local.jpeg') center/cover no-repeat}
+.values .service-card:hover{filter:saturate(1.08)}
+.values .service-card .card-number{color:#f1efed}
+.values .service-card .service-icon{color:#ff7890}
+.values .service-card p{color:#f0efec}
+.values .service-card .round-arrow{background:#fff;color:#222}
