@@ -17,15 +17,22 @@ if (hero) {
   const previous = hero.querySelector('.carousel-arrow.prev');
   const next = hero.querySelector('.carousel-arrow.next');
   const dots = [...hero.querySelectorAll('.dots i')];
-  const assetBase = /\/(ca|en|de)\//.test(location.pathname) ? '../assets/' : 'assets/';
-  const slides = ['hero.jpg', 'griferia.jpg', 'aire.jpg'];
+  const isDesignB = /\/diseno-b\//.test(location.pathname);
+  const assetBase = isDesignB || /\/(ca|en|de)\//.test(location.pathname) ? '../assets/' : 'assets/';
+  const slides = isDesignB
+    ? ['hero.jpg', 'carousel-bathroom.jpg', 'carousel-clima.jpg']
+    : ['hero.jpg', 'griferia.jpg', 'aire.jpg'];
   const locale = document.documentElement.lang.slice(0, 2);
-  const descriptions = {
+  const descriptions = isDesignB ? [
+    'Baño contemporáneo con ducha y grifería',
+    'Baño moderno con ducha acristalada',
+    'Salón moderno con aire acondicionado'
+  ] : ({
     es: ['Baño moderno con ducha y grifería', 'Lavabo con grifería de latón', 'Aire acondicionado en un salón moderno'],
     ca: ['Bany modern amb dutxa i aixetes', 'Lavabo amb aixeta de llautó', 'Aire condicionat en una sala d’estar moderna'],
     en: ['Modern bathroom with shower and taps', 'Bathroom sink with brass tap', 'Air conditioning in a modern living room'],
     de: ['Modernes Bad mit Dusche und Armaturen', 'Waschbecken mit Messingarmatur', 'Klimaanlage in einem modernen Wohnzimmer']
-  }[locale] || ['Baño moderno con ducha y grifería', 'Lavabo con grifería de latón', 'Aire acondicionado en un salón moderno'];
+  }[locale] || ['Baño moderno con ducha y grifería', 'Lavabo con grifería de latón', 'Aire acondicionado en un salón moderno']);
   const slideCounter = {
     es: n => `Diapositiva ${n} de ${slides.length}`,
     ca: n => `Diapositiva ${n} de ${slides.length}`,
