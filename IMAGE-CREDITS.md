@@ -13,5 +13,10 @@ Las siguientes fotografías se descargaron de Unsplash y se guardaron localmente
 | `valor-calidad.jpg` | “A bathroom sink with a gold faucet next to a white bowl” — Tile Merchant Ireland | [Unsplash](https://unsplash.com/photos/a-bathroom-sink-with-a-gold-faucet-next-to-a-white-bowl-VwwGibLTY70) |
 | `valor-asesoramiento.jpeg` | “A real estate agent discusses house plans with a couple in a modern living room setting” — Vitaly Gariev | [Pexels](https://www.pexels.com/photo/couple-and-real-estate-agent-sitting-in-house-23225013/) |
 | `valor-compromiso-local.jpeg` | “Photo of brown, gray, and beige concrete pathway” — Oscar Nord | [Unsplash](https://unsplash.com/photos/photo-of-brown-gray-and-beige-concrete-pathway-LZ34wSVIXDQ) |
+| `aerotermia.jpg` | “Modern outdoor heat pump unit next to building” — alpha innotec | [Unsplash](https://unsplash.com/photos/modern-outdoor-heat-pump-unit-next-to-building-TDtycnfiDa8) |
+| `descalcificador.jpg` | Descalcificador doméstico instalado en un armario de cocina | [Leroy Merlin](https://www.leroymerlin.fr/comment-choisir/comment-choisir-son-adoucisseur-eau.html) |
+| `termos.jpg` | “Gray Water Heater in the Bathroom” — Алексей Вечерин | [Pexels](https://www.pexels.com/photo/gray-water-heater-in-the-bathroom-9551366/) |
+| `piscina.jpg` | “A robotic pool cleaner sits near the pool” — Aiper Pool Cleaner | [Unsplash](https://unsplash.com/photos/a-robotic-pool-cleaner-sits-near-the-pool--8ZNVRdKhjU) |
+| `outlet.jpg` | Exposición outlet de sanitarios y muebles de baño | [Island Bathrooms](https://www.islandbathrooms.co.uk/island-bathrooms-clearance) |
 
 Las imágenes se han recortado y reducido desde Unsplash para ajustarse a los espacios de la web.

@@ -1,2 +1,0 @@
-.hero:after{content:"";position:absolute;z-index:0;left:-5%;bottom:-83px;width:110%;height:112px;border-radius:50% 50% 0 0/82% 82% 0 0;background:var(--paper)}
-.hero-content,.hero-bottom,.hero-orb{z-index:1}

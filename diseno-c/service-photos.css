@@ -1,9 +1,0 @@
-.services .service-card{color:#fff;isolation:isolate;overflow:hidden}
-.services .service-card:nth-child(1){background:linear-gradient(0deg,rgba(20,20,19,.82),rgba(20,20,19,.26)),url('../assets/griferia.jpg') center/cover no-repeat}
-.services .service-card:nth-child(2){background:linear-gradient(0deg,rgba(20,20,19,.82),rgba(20,20,19,.26)),url('../assets/duchas.jpg') center/cover no-repeat}
-.services .service-card:nth-child(3){background:linear-gradient(0deg,rgba(20,20,19,.82),rgba(20,20,19,.26)),url('../assets/aire.jpg') center/cover no-repeat}
-.services .service-card:hover{background-size:auto,cover;filter:saturate(1.08)}
-.services .service-card .card-number{color:#f1efed}
-.services .service-card .service-icon{color:#ff7890}
-.services .service-card p{color:#f0efec}
-.services .service-card .round-arrow{background:#fff;color:#222}
