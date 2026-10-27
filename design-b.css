@@ -20,3 +20,7 @@ main{overflow:hidden}.wrap{width:min(var(--max),calc(100% - 56px));margin:0 auto
 
 .brand-logo{display:block;width:136px;height:auto;max-height:76px;object-fit:contain}.footer-brand .brand{display:inline-flex;padding:4px;background:#fff;border-radius:1px}.footer-brand .brand-logo{width:146px;max-height:82px}@media(max-width:760px){.brand-logo{width:108px;max-height:61px}.footer-brand .brand-logo{width:142px;max-height:80px}}
 
+
+/* Center the contact details within their column. */
+.contact-details{width:min(100%,440px);justify-self:center}
+
