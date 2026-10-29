@@ -3,4 +3,10 @@ IMAGE-CREDITS.md
 PUBLICAR-CLOUDFLARE.md
 wrangler.jsonc
 .assetsignore
+worker.js
+seed-products.js
+migrations/
+.wrangler/
+.dev.vars
+.dev.vars.*
 .git/

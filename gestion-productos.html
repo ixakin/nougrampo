@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Gestión de productos de Nou Grampo.">
+  <title>Gestión de productos | Nou Grampo</title>
+  <link rel="stylesheet" href="design-b.css">
+</head>
+<body>
+  <div class="topbar"><p>ESPECIALISTAS EN BAÑO Y CLIMATIZACIÓN</p><div class="topbar-contact"><a href="tel:+34971820390">971 820 390</a><a href="mailto:info@nougrampo.es">info@nougrampo.es</a></div></div>
+  <header class="site-header">
+    <a class="brand" href="index.html"><img class="brand-logo" src="assets/logo-nou-grampo.jpg" alt="Nou Grampo"></a>
+    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegación principal"><a href="index.html">INICIO</a><a href="empresa.html">EMPRESA</a><a href="productos.html">PRODUCTOS / MARCAS</a><a href="contacto.html">CONTACTO</a><a href="informacion.html">INFORMACIÓN</a></nav>
+    <a class="button header-cta" href="contacto.html">PRESUPUESTO</a>
+    <nav class="language-switcher" aria-label="Idioma"><span class="lang-current" lang="es" aria-current="page">ES</span></nav>
+    <a class="private-access is-current" href="zona-privada.html" aria-label="Volver a la zona privada" title="Zona privada"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="10" width="15" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></a>
+  </header>
+  <main>
+    <section class="page-banner"><p class="eyebrow">ZONA PRIVADA · CATÁLOGO</p><h1>Gestión de productos</h1><p>Consulta, busca y modifica los productos del catálogo.</p></section>
+    <section class="product-admin product-list-page wrap">
+      <a class="private-back" href="zona-privada.html">← Volver a la zona privada</a>
+      <section class="admin-panel products-list-panel" aria-labelledby="products-list-title">
+        <div class="admin-panel-heading list-heading"><div><p class="eyebrow">INVENTARIO</p><h2 id="products-list-title">Productos guardados <span id="product-count" class="count-badge">0</span></h2></div><a class="button add-product-button" href="editar-producto.html">AÑADIR PRODUCTO</a></div>
+        <div class="product-search-controls">
+          <label class="search-field">Buscar por nombre o tipo<input id="product-search" type="search" placeholder="Ej. grifo, aerotermia…" autocomplete="off"></label>
+          <label class="filter-label">Tipo<select id="product-type-filter"><option value="all">Todos los tipos</option><option value="griferias">Griferías</option><option value="sanitarios">Sanitarios y mamparas</option><option value="aire-acondicionado">Aire acondicionado</option><option value="aerotermia">Aerotermia</option><option value="descalcificadores">Descalcificadores</option><option value="termos">Termos eléctricos y calentadores de gas</option><option value="piscina">Productos para piscina</option><option value="outlet">Outlet</option></select></label>
+          <label class="filter-label">Estado<select id="product-filter"><option value="all">Todos</option><option value="active">Activos</option><option value="inactive">Inactivos</option></select></label>
+        </div>
+        <div id="products-list" class="products-list" aria-live="polite"></div>
+        <nav id="products-pagination" class="product-pagination" aria-label="Paginación de productos" hidden></nav>
+        <p id="empty-products" class="empty-products">Todavía no hay productos guardados.</p>
+      </section>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/logo-nou-grampo.jpg" alt="Nou Grampo"></a><p>Grifería y climatización<br>en Mallorca</p></div><div><h3>ENLACES</h3><a href="index.html">Inicio</a><a href="empresa.html">Empresa</a><a href="productos.html">Productos / Marcas</a><a href="contacto.html">Contacto</a><a href="informacion.html">Información</a></div><div><h3>PRODUCTOS</h3><a href="productos.html#griferia">Grifería</a><a href="productos.html#duchas">Duchas</a><a href="productos.html#climatizacion">Aire acondicionado</a><a href="productos.html#multisplit">Sistemas Multi Split</a></div><div><h3>CONTACTO</h3><p>971 820 390<br><a href="https://wa.me/34678741805">Móvil / WhatsApp: 678 741 805</a><br>info@nougrampo.es<br>Ronda de l’Oest 45<br>07680 Porto Cristo</p></div><div class="legal"><span>© 2024 Nou Grampo. Todos los derechos reservados.</span><span><a href="informacion.html#aviso-legal">Aviso legal</a>　|　<a href="informacion.html#privacidad">Privacidad</a>　|　<a href="informacion.html#cookies">Cookies</a></span></div></footer>
+  <script src="script.js"></script><script src="product-management.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Añadir o modificar productos de Nou Grampo.">
+  <title>Editar producto | Nou Grampo</title>
+  <link rel="stylesheet" href="design-b.css">
+</head>
+<body>
+  <div class="topbar"><p>ESPECIALISTAS EN BAÑO Y CLIMATIZACIÓN</p><div class="topbar-contact"><a href="tel:+34971820390">971 820 390</a><a href="mailto:info@nougrampo.es">info@nougrampo.es</a></div></div>
+  <header class="site-header">
+    <a class="brand" href="index.html"><img class="brand-logo" src="assets/logo-nou-grampo.jpg" alt="Nou Grampo"></a>
+    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegación principal"><a href="index.html">INICIO</a><a href="empresa.html">EMPRESA</a><a href="productos.html">PRODUCTOS / MARCAS</a><a href="contacto.html">CONTACTO</a><a href="informacion.html">INFORMACIÓN</a></nav>
+    <a class="button header-cta" href="contacto.html">PRESUPUESTO</a>
+    <nav class="language-switcher" aria-label="Idioma"><span class="lang-current" lang="es" aria-current="page">ES</span></nav>
+    <a class="private-access is-current" href="zona-privada.html" aria-label="Volver a la zona privada" title="Zona privada"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4.5" y="10" width="15" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></a>
+  </header>
+  <main>
+    <section class="page-banner"><p class="eyebrow">ZONA PRIVADA · CATÁLOGO</p><h1 id="editor-page-title">Añadir producto</h1><p>Completa los datos del producto y sus descripciones en los cuatro idiomas.</p></section>
+    <section class="product-admin product-editor wrap">
+      <a class="private-back" href="gestion-productos.html">← Volver a productos</a>
+      <section class="admin-panel" aria-labelledby="product-form-title">
+        <div class="admin-panel-heading"><div><p class="eyebrow">CATÁLOGO</p><h2 id="product-form-title">Añadir producto</h2></div></div>
+        <form id="product-form" class="product-form">
+          <input type="hidden" id="product-id" name="id">
+          <label class="admin-field">Nombre del producto<input id="product-name" name="name" maxlength="120" required placeholder="Ej. Grifo monomando cromado"></label>
+          <label class="admin-field">Tipo<select id="product-type" name="type" required><option value="">Selecciona un tipo</option><option value="griferias">Griferías</option><option value="sanitarios">Sanitarios y mamparas</option><option value="aire-acondicionado">Aire acondicionado</option><option value="aerotermia">Aerotermia</option><option value="descalcificadores">Descalcificadores</option><option value="termos">Termos eléctricos y calentadores de gas</option><option value="piscina">Productos para piscina</option><option value="outlet">Outlet</option></select></label>
+          <label class="admin-field">Imagen del producto<input id="product-image" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="field-help">JPG, PNG, WebP o GIF. Máximo 1 MB.</span></label>
+          <div id="image-preview-wrap" class="image-preview-wrap" hidden><img id="image-preview" alt="Vista previa de la imagen del producto"><button id="remove-image" class="text-button" type="button">Quitar imagen</button></div>
+          <fieldset class="translation-fields"><legend>Descripción por idioma</legend>
+            <label class="admin-field"><span><span class="language-tag">ES</span> Español</span><textarea id="description-es" name="descriptionEs" rows="3" maxlength="1200" required placeholder="Descripción del producto en español"></textarea></label>
+            <label class="admin-field"><span><span class="language-tag">CA</span> Català</span><textarea id="description-ca" name="descriptionCa" rows="3" maxlength="1200" required placeholder="Descripció del producte en català"></textarea></label>
+            <label class="admin-field"><span><span class="language-tag">EN</span> English</span><textarea id="description-en" name="descriptionEn" rows="3" maxlength="1200" required placeholder="Product description in English"></textarea></label>
+            <label class="admin-field"><span><span class="language-tag">DE</span> Deutsch</span><textarea id="description-de" name="descriptionDe" rows="3" maxlength="1200" required placeholder="Produktbeschreibung auf Deutsch"></textarea></label>
+          </fieldset>
+          <label class="active-toggle"><input id="product-active" name="active" type="checkbox" checked><span class="toggle-check" aria-hidden="true"></span><span><strong>Producto activo</strong><small>Los productos inactivos se conservan en la gestión.</small></span></label>
+          <div class="form-actions"><button id="save-product" class="button" type="submit">GUARDAR PRODUCTO</button><a class="secondary-button cancel-link" href="gestion-productos.html">Cancelar</a></div>
+          <p id="form-status" class="admin-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/logo-nou-grampo.jpg" alt="Nou Grampo"></a><p>Grifería y climatización<br>en Mallorca</p></div><div><h3>ENLACES</h3><a href="index.html">Inicio</a><a href="empresa.html">Empresa</a><a href="productos.html">Productos / Marcas</a><a href="contacto.html">Contacto</a><a href="informacion.html">Información</a></div><div><h3>PRODUCTOS</h3><a href="productos.html#griferia">Grifería</a><a href="productos.html#duchas">Duchas</a><a href="productos.html#climatizacion">Aire acondicionado</a><a href="productos.html#multisplit">Sistemas Multi Split</a></div><div><h3>CONTACTO</h3><p>971 820 390<br><a href="https://wa.me/34678741805">Móvil / WhatsApp: 678 741 805</a><br>info@nougrampo.es<br>Ronda de l’Oest 45<br>07680 Porto Cristo</p></div><div class="legal"><span>© 2024 Nou Grampo. Todos los derechos reservados.</span><span><a href="informacion.html#aviso-legal">Aviso legal</a>　|　<a href="informacion.html#privacidad">Privacidad</a>　|　<a href="informacion.html#cookies">Cookies</a></span></div></footer>
+  <script src="script.js"></script><script src="product-management.js"></script>
+</body>
+</html>

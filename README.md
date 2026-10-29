@@ -12,7 +12,8 @@ Repositorio: [github.com/ixakin/nougrampo](https://github.com/ixakin/nougrampo)
 - Diseño adaptable, estilos compartidos y recursos gráficos en `assets/`.
 - Formularios en inicio y contacto conectados a FormSubmit. El destinatario está puesto temporalmente en `ixakin@gmail.com`.
 - Página `404.html` y cabeceras web básicas en `_headers`.
-- Configuración de Workers Static Assets en [`wrangler.jsonc`](wrangler.jsonc), con archivos de documentación excluidos por `.assetsignore`.
+- Catálogo privado conectado a Cloudflare D1 mediante una API de Workers; las sesiones de administración usan el secreto `ADMIN_PASSWORD`.
+- Configuración de Workers Static Assets y D1 en [`wrangler.jsonc`](wrangler.jsonc), con código de servidor y documentación excluidos de los assets públicos.
 - Guía de publicación en [`PUBLICAR-CLOUDFLARE.md`](PUBLICAR-CLOUDFLARE.md).
 
 ## Estructura
@@ -29,13 +30,16 @@ Repositorio: [github.com/ixakin/nougrampo](https://github.com/ixakin/nougrampo)
 ├── script.js            # comportamiento común y envío AJAX de formularios
 ├── 404.html             # página no encontrada
 ├── _headers             # cabeceras HTTP de Cloudflare
-├── wrangler.jsonc       # Worker estático `nougrampo`
+├── worker.js            # API D1 y sesiones de administración
+├── migrations/          # Esquema de D1
+├── seed-products.js     # 32 productos iniciales de muestra
+├── wrangler.jsonc       # Worker `nougrampo`, assets y binding D1
 └── .assetsignore        # excluye README y archivos de configuración del despliegue
 ```
 
 ## Desarrollo y publicación
 
-No hay dependencias ni proceso de compilación. La raíz del repositorio es la carpeta pública. El Worker estático se configura en `wrangler.jsonc`. Conecta este repositorio a Cloudflare Workers Builds, con `main` como rama de producción y el nombre `nougrampo`, y Cloudflare desplegará las actualizaciones automáticamente.
+No hay dependencias de aplicación ni proceso de compilación. Antes del despliegue, crea D1, configura su identificador en `wrangler.jsonc`, aplica las migraciones y guarda `ADMIN_PASSWORD` como secreto de Worker. Los comandos están en [`PUBLICAR-CLOUDFLARE.md`](PUBLICAR-CLOUDFLARE.md). Después conecta el repositorio a Cloudflare Workers Builds.
 
 Consulta [`PUBLICAR-CLOUDFLARE.md`](PUBLICAR-CLOUDFLARE.md) para los pasos de despliegue, dominio y formularios.
 
