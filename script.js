@@ -1,5 +1,38 @@
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.main-nav');
+
+// Keep the navigation split into separate product and brand sections on every
+// translated page, including older static pages that still contain the legacy label.
+const locale = document.documentElement.lang.slice(0, 2);
+const navigationLabels = {
+  es: ['PRODUCTOS', 'MARCAS'],
+  ca: ['PRODUCTES', 'MARQUES'],
+  en: ['PRODUCTS', 'BRANDS'],
+  de: ['PRODUKTE', 'MARKEN']
+}[locale] || ['PRODUCTS', 'BRANDS'];
+const legacyNavigationLabels = ['PRODUCTOS / MARCAS', 'PRODUCTES / MARQUES', 'PRODUCTS / BRANDS', 'PRODUKTE / MARKEN'];
+nav?.querySelectorAll('a').forEach(link => {
+  if (!legacyNavigationLabels.includes(link.textContent.trim())) return;
+  link.textContent = navigationLabels[0];
+  link.href = link.href.replace(/productos\.html(?:#.*)?$/, 'productos.html');
+  const brandsLink = link.cloneNode(true);
+  brandsLink.textContent = navigationLabels[1];
+  brandsLink.href = link.href.replace(/productos\.html$/, 'marcas.html');
+  brandsLink.classList.remove('active');
+  brandsLink.removeAttribute('aria-current');
+  link.parentNode.insertBefore(brandsLink, link.nextSibling);
+});
+
+document.querySelectorAll('.site-footer a').forEach(link => {
+  if (!legacyNavigationLabels.includes(link.textContent.trim())) return;
+  const brandsLink = link.cloneNode(true);
+  link.textContent = navigationLabels[0];
+  link.href = link.href.replace(/productos\.html(?:#.*)?$/, 'productos.html');
+  brandsLink.textContent = navigationLabels[1];
+  brandsLink.href = link.href.replace(/productos\.html$/, 'marcas.html');
+  link.parentNode.insertBefore(brandsLink, link.nextSibling);
+});
+
 toggle.addEventListener('click', () => {
   const open = nav.classList.toggle('open');
   toggle.setAttribute('aria-expanded', String(open));
