@@ -20,6 +20,35 @@ Las peticiones a los recursos estáticos se sirven gratuitamente en Workers Free
 
 La primera carga del catálogo crea 32 productos de muestra (cuatro de cada tipo, con 24 activos y 8 inactivos). Se insertan solo cuando D1 aún está vacío. La contraseña habilita la gestión privada; el catálogo público solo recibe productos activos.
 
+## Acceso privado y Cloudflare Zero Trust
+
+El candado abre ahora `zona-privada.html`, donde se solicita primero la contraseña. El botón de gestión solo aparece después de validar la sesión contra `/api/auth`. Además, el Worker redirige a la zona privada cualquier acceso directo no autenticado a `gestion-productos.html` o `editar-producto.html`; la protección no depende únicamente del JavaScript del navegador.
+
+Para añadir una segunda capa con Cloudflare Zero Trust, crea una aplicación **Self-hosted** en Zero Trust para el dominio publicado y limita estas rutas a los correos o grupos autorizados:
+
+- `/zona-privada.html`
+- `/gestion-productos.html`
+- `/editar-producto.html`
+
+Mantén la contraseña `ADMIN_PASSWORD` como secreto del Worker. Zero Trust controla quién puede llegar a las páginas privadas y la sesión del Worker controla quién puede usar la gestión del catálogo. No protejas `/api/products` completo con Access si el catálogo público debe seguir cargando los productos activos; las operaciones privadas ya exigen la sesión del Worker.
+
+### Contraseña en local
+
+Wrangler carga las variables locales desde `.dev.vars`, un archivo que ya está excluido de Git mediante `.gitignore`. Créalo en la raíz del proyecto con este contenido, usando una contraseña de al menos 16 caracteres:
+
+```dotenv
+ADMIN_PASSWORD="una-contraseña-local-larga"
+```
+
+Para probar el Worker y la base D1 localmente:
+
+```bash
+npx wrangler d1 migrations apply nougrampo-products --local
+npx wrangler dev
+```
+
+Después abre la URL local que muestre Wrangler y entra desde el icono del candado. No uses `--remote` para esta prueba si no quieres modificar la base de datos de producción. El archivo `.dev.vars` no debe subirse nunca al repositorio.
+
 D1 ofrece plan gratuito con límites de uso. En el plan Workers Free incluye 5 millones de filas leídas al día y 100.000 filas escritas al día; cada base de datos puede ocupar hasta 500 MB. Si se alcanza un límite diario, las consultas se pausan hasta el reinicio del contador. [Precios y límites oficiales de D1](https://developers.cloudflare.com/d1/platform/pricing/) · [Límites de D1](https://developers.cloudflare.com/d1/platform/limits/)
 
 Cloudflare Workers Builds puede conectar el repositorio y publicar las actualizaciones de `main` automáticamente. [Integración GitHub](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/)

@@ -93,6 +93,10 @@ async function readProducts(env, includeInactive) {
   return result.results.map(rowToProduct);
 }
 
+function isPrivatePage(pathname) {
+  return ["/gestion-productos.html", "/editar-producto.html"].includes(pathname);
+}
+
 async function seedIfEmpty(env) {
   const count = await env.DB.prepare("SELECT COUNT(*) AS total FROM products").first("total");
   if (count !== 0) return;
@@ -104,6 +108,7 @@ async function seedIfEmpty(env) {
 
 async function api(request, env, url) {
   const path = url.pathname;
+  const secureCookie = url.protocol === "https:" ? "; Secure" : "";
   if (["/api/login", "/api/logout", "/api/auth"].includes(path) || path.startsWith("/api/products")) {
     if (typeof env.ADMIN_PASSWORD !== "string" || env.ADMIN_PASSWORD.length < 16) {
       return json({ error: "La contraseña privada aún no está configurada. Añade el secreto ADMIN_PASSWORD en Cloudflare." }, 503);
@@ -115,11 +120,11 @@ async function api(request, env, url) {
     try { body = await request.json(); } catch { return json({ error: "Solicitud no válida." }, 400); }
     if (typeof body.password !== "string" || body.password.length > 512 || body.password !== env.ADMIN_PASSWORD) return json({ error: "Contraseña incorrecta." }, 401);
     const token = await createSession(env.ADMIN_PASSWORD);
-    return json({ ok: true }, 200, { "set-cookie": `${SESSION_COOKIE}=${token}; Path=/; Max-Age=${SESSION_SECONDS}; HttpOnly; Secure; SameSite=Strict` });
+    return json({ ok: true }, 200, { "set-cookie": `${SESSION_COOKIE}=${token}; Path=/; Max-Age=${SESSION_SECONDS}; HttpOnly${secureCookie}; SameSite=Strict` });
   }
   if (path === "/api/logout" && request.method === "POST") {
     if (!sameOrigin(request, url)) return json({ error: "Origen no permitido." }, 403);
-    return json({ ok: true }, 200, { "set-cookie": `${SESSION_COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict` });
+    return json({ ok: true }, 200, { "set-cookie": `${SESSION_COOKIE}=; Path=/; Max-Age=0; HttpOnly${secureCookie}; SameSite=Strict` });
   }
   if (path === "/api/auth" && request.method === "GET") {
     return await hasSession(request, env.ADMIN_PASSWORD) ? json({ ok: true }) : json({ error: "Inicia sesión para gestionar productos." }, 401);
@@ -170,6 +175,11 @@ export default {
     const url = new URL(request.url);
     try {
       if (url.pathname.startsWith("/api/")) return await api(request, env, url);
+      if (request.method === "GET" && isPrivatePage(url.pathname)) {
+        const authenticated = typeof env.ADMIN_PASSWORD === "string"
+          && await hasSession(request, env.ADMIN_PASSWORD);
+        if (!authenticated) return Response.redirect(new URL("/zona-privada.html", url), 302);
+      }
       return env.ASSETS.fetch(request);
     } catch (error) {
       console.error("Nou Grampo Worker error", error);
