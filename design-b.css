@@ -65,3 +65,15 @@ main{overflow:hidden}.wrap{width:min(var(--max),calc(100% - 56px));margin:0 auto
 .brands-page{background:var(--soft)}.brands-intro{max-width:720px;margin:0 auto 34px;text-align:center}.brands-intro h2{font:700 clamp(28px,3.2vw,42px)/1.2 Montserrat,Arial,sans-serif;letter-spacing:-.04em;margin:0 0 14px}.brands-intro p{color:var(--muted);font-size:14px;margin:0}.brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.brand-card{min-height:190px;padding:28px 24px;background:#fff;border-top:3px solid var(--red);box-shadow:0 3px 18px #2024250b;display:flex;flex-direction:column;justify-content:space-between}.brand-card span{color:var(--red);font-size:10px;font-weight:700;letter-spacing:.16em}.brand-card h3{font:700 clamp(20px,2.2vw,28px) Montserrat,Arial,sans-serif;letter-spacing:-.03em;margin:18px 0 8px}.brand-card p{color:var(--muted);font-size:12px;line-height:1.65;margin:0}.brands-page+.page-cta{background:#fff}
 @media(max-width:760px){.brands-grid{grid-template-columns:1fr 1fr;gap:12px}.brand-card{min-height:175px;padding:22px 18px}.brand-card h3{font-size:20px}}
 @media(max-width:420px){.brands-grid{grid-template-columns:1fr}.brand-card{min-height:160px}}
+
+.private-management-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:1320px}
+.private-management-grid .private-card{max-width:none}
+@media(max-width:760px){.private-management-grid{grid-template-columns:1fr;gap:14px}}
+
+.public-brand-image{display:block;width:100%;height:120px;object-fit:contain;object-position:center;margin:0 0 20px;background:#fff}
+@media(max-width:760px){.public-brand-image{height:100px;margin:0 0 16px}}
+
+/* Slightly larger primary navigation labels. */
+.main-nav a{font-size:11px}
+@media(max-width:1000px){.main-nav a{font-size:10px}}
+@media(max-width:760px){.main-nav a{font-size:12px}}

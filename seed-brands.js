@@ -1,0 +1,8 @@
+export const initialBrands = [
+  { id: "grohe", name: "GROHE", image: "assets/brands/grohe.svg", descriptions: { es: "Diseño y tecnología para baños y cocinas.", ca: "Disseny i tecnologia per a banys i cuines.", en: "Design and technology for bathrooms and kitchens.", de: "Design und Technologie für Bad und Küche." } },
+  { id: "roca", name: "ROCA", image: "assets/brands/roca.svg", descriptions: { es: "Soluciones completas para el baño.", ca: "Solucions completes per al bany.", en: "Complete solutions for the bathroom.", de: "Komplettlösungen für das Badezimmer." } },
+  { id: "hansgrohe", name: "HANSGROHE", image: "assets/brands/hansgrohe.svg", descriptions: { es: "Confort y precisión en cada detalle.", ca: "Confort i precisió en cada detall.", en: "Comfort and precision in every detail.", de: "Komfort und Präzision in jedem Detail." } },
+  { id: "daikin", name: "DAIKIN", image: "assets/brands/daikin.svg", descriptions: { es: "Eficiencia y confort durante todo el año.", ca: "Eficiència i confort durant tot l’any.", en: "Efficiency and comfort all year round.", de: "Effizienz und Komfort das ganze Jahr." } },
+  { id: "mitsubishi-electric", name: "MITSUBISHI ELECTRIC", image: "assets/brands/mitsubishi-electric.svg", descriptions: { es: "Soluciones avanzadas para cada espacio.", ca: "Solucions avançades per a cada espai.", en: "Advanced solutions for every space.", de: "Fortschrittliche Lösungen für jeden Raum." } },
+  { id: "ferroli", name: "FERROLI", image: "assets/brands/ferroli.svg", descriptions: { es: "Equipos fiables para el confort diario.", ca: "Equips fiables per al confort diari.", en: "Reliable equipment for everyday comfort.", de: "Zuverlässige Geräte für täglichen Komfort." } }
+];

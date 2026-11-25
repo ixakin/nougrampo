@@ -1,9 +1,10 @@
 (() => {
   const loginPanel = document.querySelector('#private-login');
   const managementLink = document.querySelector('#private-management-link');
+  const brandsManagementLink = document.querySelector('#private-brands-management-link');
   const logoutButton = document.querySelector('#private-logout');
   const form = document.querySelector('#private-login-form');
-  if (!loginPanel || !managementLink || !logoutButton || !form) return;
+  if (!loginPanel || !managementLink || !brandsManagementLink || !logoutButton || !form) return;
 
   const password = document.querySelector('#private-password');
   const submit = document.querySelector('#private-login-submit');
@@ -24,12 +25,14 @@
   function showAuthenticated() {
     loginPanel.hidden = true;
     managementLink.hidden = false;
+    brandsManagementLink.hidden = false;
     logoutButton.hidden = false;
   }
 
   function showLogin(message = '') {
     loginPanel.hidden = false;
     managementLink.hidden = true;
+    brandsManagementLink.hidden = true;
     logoutButton.hidden = true;
     status.textContent = message;
     status.classList.remove('error');

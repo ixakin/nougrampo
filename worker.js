@@ -1,4 +1,5 @@
 import { initialProducts } from "./seed-products.js";
+import { initialBrands } from "./seed-brands.js";
 
 const SESSION_COOKIE = "ng_admin";
 const SESSION_SECONDS = 8 * 60 * 60;
@@ -7,6 +8,7 @@ const TYPES = new Set([
   "griferias", "sanitarios", "aire-acondicionado", "aerotermia",
   "descalcificadores", "termos", "piscina", "outlet"
 ]);
+const BRAND_MAX_NAME = 120;
 
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
@@ -67,6 +69,15 @@ function validateProduct(input) {
   if (!input || typeof input !== "object") return "Datos de producto no válidos.";
   if (typeof input.name !== "string" || !input.name.trim() || input.name.trim().length > 120) return "El nombre es obligatorio y debe tener como máximo 120 caracteres.";
   if (!TYPES.has(input.type)) return "Selecciona un tipo de producto válido.";
+  if (input.brandId !== undefined && input.brandId !== null && input.brandId !== "" && typeof input.brandId !== "string") return "La marca seleccionada no es válida.";
+  if (typeof input.image !== "string" || input.image.length > 1_500_000) return "La imagen no es válida o supera el límite permitido.";
+  if (!input.descriptions || ["es", "ca", "en", "de"].some(lang => typeof input.descriptions[lang] !== "string" || !input.descriptions[lang].trim() || input.descriptions[lang].length > 1200)) return "Completa las descripciones en los cuatro idiomas.";
+  return "";
+}
+
+function validateBrand(input) {
+  if (!input || typeof input !== "object") return "Datos de marca no válidos.";
+  if (typeof input.name !== "string" || !input.name.trim() || input.name.trim().length > BRAND_MAX_NAME) return "El nombre es obligatorio y debe tener como máximo 120 caracteres.";
   if (typeof input.image !== "string" || input.image.length > 1_500_000) return "La imagen no es válida o supera el límite permitido.";
   if (!input.descriptions || ["es", "ca", "en", "de"].some(lang => typeof input.descriptions[lang] !== "string" || !input.descriptions[lang].trim() || input.descriptions[lang].length > 1200)) return "Completa las descripciones en los cuatro idiomas.";
   return "";
@@ -77,12 +88,17 @@ function rowToProduct(row) {
     id: row.id,
     name: row.name,
     type: row.type,
+    brandId: row.brand_id || null,
     active: Boolean(row.active),
     image: row.image || "",
     descriptions: { es: row.description_es, ca: row.description_ca, en: row.description_en, de: row.description_de },
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
+}
+
+function rowToBrand(row) {
+  return { id: row.id, name: row.name, active: Boolean(row.active), image: row.image || "", descriptions: { es: row.description_es, ca: row.description_ca, en: row.description_en, de: row.description_de }, createdAt: row.created_at, updatedAt: row.updated_at };
 }
 
 async function readProducts(env, includeInactive) {
@@ -93,8 +109,14 @@ async function readProducts(env, includeInactive) {
   return result.results.map(rowToProduct);
 }
 
+async function readBrands(env, includeInactive) {
+  const query = includeInactive ? "SELECT * FROM brands ORDER BY updated_at DESC" : "SELECT * FROM brands WHERE active = 1 ORDER BY updated_at DESC";
+  const result = await env.DB.prepare(query).all();
+  return result.results.map(rowToBrand);
+}
+
 function isPrivatePage(pathname) {
-  return ["/gestion-productos.html", "/editar-producto.html"].includes(pathname);
+  return ["/gestion-productos.html", "/editar-producto.html", "/gestion-marcas.html", "/editar-marca.html"].includes(pathname);
 }
 
 async function seedIfEmpty(env) {
@@ -106,10 +128,19 @@ async function seedIfEmpty(env) {
   ).bind(product.id, product.name, product.type, product.active ? 1 : 0, product.image, product.descriptions.es, product.descriptions.ca, product.descriptions.en, product.descriptions.de, now, now)));
 }
 
+async function seedBrandsIfEmpty(env) {
+  const count = await env.DB.prepare("SELECT COUNT(*) AS total FROM brands").first("total");
+  if (count !== 0) return;
+  const now = new Date().toISOString();
+  await env.DB.batch(initialBrands.map(brand => env.DB.prepare(
+    "INSERT OR IGNORE INTO brands (id, name, active, image, description_es, description_ca, description_en, description_de, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  ).bind(brand.id, brand.name, 1, brand.image || "", brand.descriptions.es, brand.descriptions.ca, brand.descriptions.en, brand.descriptions.de, now, now)));
+}
+
 async function api(request, env, url) {
   const path = url.pathname;
   const secureCookie = url.protocol === "https:" ? "; Secure" : "";
-  if (["/api/login", "/api/logout", "/api/auth"].includes(path) || path.startsWith("/api/products")) {
+  if (["/api/login", "/api/logout", "/api/auth"].includes(path) || path.startsWith("/api/products") || path.startsWith("/api/brands")) {
     if (typeof env.ADMIN_PASSWORD !== "string" || env.ADMIN_PASSWORD.length < 16) {
       return json({ error: "La contraseña privada aún no está configurada. Añade el secreto ADMIN_PASSWORD en Cloudflare." }, 503);
     }
@@ -136,6 +167,43 @@ async function api(request, env, url) {
     return json(await readProducts(env, includeInactive));
   }
 
+  if (path === "/api/brands" && request.method === "GET") {
+    await seedBrandsIfEmpty(env);
+    const includeInactive = url.searchParams.get("all") === "1";
+    if (includeInactive && !(await hasSession(request, env.ADMIN_PASSWORD))) return json({ error: "Inicia sesión para ver el catálogo completo." }, 401);
+    return json(await readBrands(env, includeInactive));
+  }
+
+  if (path.startsWith("/api/brands")) {
+    if (!sameOrigin(request, url)) return json({ error: "Origen no permitido." }, 403);
+    if (!(await hasSession(request, env.ADMIN_PASSWORD))) return json({ error: "Tu sesión ha caducado. Inicia sesión de nuevo." }, 401);
+    if (!["POST", "PUT", "DELETE"].includes(request.method)) return json({ error: "Método no permitido." }, 405, { allow: "GET, POST, PUT, DELETE" });
+    if (Number(request.headers.get("Content-Length") || 0) > MAX_REQUEST_BYTES) return json({ error: "La solicitud supera el tamaño permitido." }, 413);
+    const id = decodeURIComponent(path.slice("/api/brands/".length));
+    if (request.method === "DELETE") {
+      if (!id) return json({ error: "Falta el identificador de la marca." }, 400);
+      await env.DB.prepare("DELETE FROM brands WHERE id = ?").bind(id).run();
+      return json({ ok: true });
+    }
+    let input;
+    try { input = await request.json(); } catch { return json({ error: "Solicitud no válida." }, 400); }
+    const issue = validateBrand(input);
+    if (issue) return json({ error: issue }, 400);
+    const now = new Date().toISOString();
+    const descriptions = input.descriptions;
+    if (request.method === "POST") {
+      const brandId = crypto.randomUUID();
+      await env.DB.prepare("INSERT INTO brands (id, name, active, image, description_es, description_ca, description_en, description_de, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .bind(brandId, input.name.trim(), input.active ? 1 : 0, input.image, descriptions.es.trim(), descriptions.ca.trim(), descriptions.en.trim(), descriptions.de.trim(), now, now).run();
+      return json({ id: brandId }, 201);
+    }
+    if (!id) return json({ error: "Falta el identificador de la marca." }, 400);
+    const result = await env.DB.prepare("UPDATE brands SET name = ?, active = ?, image = ?, description_es = ?, description_ca = ?, description_en = ?, description_de = ?, updated_at = ? WHERE id = ?")
+      .bind(input.name.trim(), input.active ? 1 : 0, input.image, descriptions.es.trim(), descriptions.ca.trim(), descriptions.en.trim(), descriptions.de.trim(), now, id).run();
+    if (!result.meta.changes) return json({ error: "No se encontró esa marca." }, 404);
+    return json({ ok: true });
+  }
+
   if (path.startsWith("/api/products")) {
     if (!sameOrigin(request, url)) return json({ error: "Origen no permitido." }, 403);
     if (!(await hasSession(request, env.ADMIN_PASSWORD))) return json({ error: "Tu sesión ha caducado. Inicia sesión de nuevo." }, 401);
@@ -152,17 +220,22 @@ async function api(request, env, url) {
     try { input = await request.json(); } catch { return json({ error: "Solicitud no válida." }, 400); }
     const issue = validateProduct(input);
     if (issue) return json({ error: issue }, 400);
+    const brandId = input.brandId || null;
+    if (brandId) {
+      const brand = await env.DB.prepare("SELECT id FROM brands WHERE id = ?").bind(brandId).first();
+      if (!brand) return json({ error: "La marca seleccionada no existe." }, 400);
+    }
     const now = new Date().toISOString();
     const descriptions = input.descriptions;
     if (request.method === "POST") {
       const productId = crypto.randomUUID();
-      await env.DB.prepare("INSERT INTO products (id, name, type, active, image, description_es, description_ca, description_en, description_de, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        .bind(productId, input.name.trim(), input.type, input.active ? 1 : 0, input.image, descriptions.es.trim(), descriptions.ca.trim(), descriptions.en.trim(), descriptions.de.trim(), now, now).run();
+      await env.DB.prepare("INSERT INTO products (id, name, type, active, image, brand_id, description_es, description_ca, description_en, description_de, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .bind(productId, input.name.trim(), input.type, input.active ? 1 : 0, input.image, brandId, descriptions.es.trim(), descriptions.ca.trim(), descriptions.en.trim(), descriptions.de.trim(), now, now).run();
       return json({ id: productId }, 201);
     }
     if (!id) return json({ error: "Falta el identificador del producto." }, 400);
-    const result = await env.DB.prepare("UPDATE products SET name = ?, type = ?, active = ?, image = ?, description_es = ?, description_ca = ?, description_en = ?, description_de = ?, updated_at = ? WHERE id = ?")
-      .bind(input.name.trim(), input.type, input.active ? 1 : 0, input.image, descriptions.es.trim(), descriptions.ca.trim(), descriptions.en.trim(), descriptions.de.trim(), now, id).run();
+    const result = await env.DB.prepare("UPDATE products SET name = ?, type = ?, active = ?, image = ?, brand_id = ?, description_es = ?, description_ca = ?, description_en = ?, description_de = ?, updated_at = ? WHERE id = ?")
+      .bind(input.name.trim(), input.type, input.active ? 1 : 0, input.image, brandId, descriptions.es.trim(), descriptions.ca.trim(), descriptions.en.trim(), descriptions.de.trim(), now, id).run();
     if (!result.meta.changes) return json({ error: "No se encontró ese producto." }, 404);
     return json({ ok: true });
   }

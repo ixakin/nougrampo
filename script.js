@@ -124,3 +124,17 @@ document.querySelectorAll('.contact-form').forEach(form => {
     }
   });
 });
+
+const brandsGrid = document.querySelector('.brands-grid');
+if (brandsGrid) {
+  const brandLocale = (document.documentElement.lang || 'es').slice(0, 2);
+  fetch('/api/brands').then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(brands => {
+    brandsGrid.replaceChildren();
+    brands.filter(brand => brand && brand.active).forEach(brand => {
+      const card = document.createElement('article'); card.className = 'brand-card';
+      if (brand.image) { const image = document.createElement('img'); image.className = 'public-brand-image'; image.src = brand.image; image.alt = brand.name || ''; image.loading = 'lazy'; card.append(image); }
+      const copy = document.createElement('div'); const title = document.createElement('h3'); title.textContent = brand.name || ''; copy.append(title); card.append(copy);
+      const description = document.createElement('p'); description.textContent = brand.descriptions?.[brandLocale] || brand.descriptions?.es || ''; card.append(description); brandsGrid.append(card);
+    });
+  }).catch(() => {});
+}

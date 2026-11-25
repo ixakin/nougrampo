@@ -110,6 +110,7 @@
     const stateFilter = document.querySelector('#product-filter');
     const pagination = document.querySelector('#products-pagination');
     let products = [];
+    const brandNames = new Map();
     let currentPage = 1;
     const pageSize = 9;
 
@@ -147,7 +148,7 @@
       list.replaceChildren();
       const query = normalize(search.value);
       const matching = products.filter(product => {
-        const matchesQuery = normalize(product.name + ' ' + (categories[product.type] || product.type)).includes(query);
+        const matchesQuery = normalize(product.name + ' ' + (categories[product.type] || product.type) + ' ' + (brandNames.get(product.brandId) || '')).includes(query);
         const matchesType = typeFilter.value === 'all' || product.type === typeFilter.value;
         const matchesState = stateFilter.value === 'all' || (stateFilter.value === 'active' ? product.active : !product.active);
         return matchesQuery && matchesType && matchesState;
@@ -169,6 +170,7 @@
         const copy = el('div', 'managed-product-copy');
         const meta = el('div', 'managed-product-meta');
         meta.append(el('span', 'managed-product-type', categories[product.type] || product.type));
+        if (product.brandId && brandNames.has(product.brandId)) meta.append(el('span', 'managed-product-type', brandNames.get(product.brandId)));
         meta.append(el('span', 'managed-product-state' + (product.active ? '' : ' inactive'), product.active ? 'Activo' : 'Inactivo'));
         copy.append(meta, el('h3', '', product.name), el('p', '', product.descriptions?.es || ''));
         const actions = el('div', 'managed-product-actions');
@@ -182,7 +184,9 @@
     }
 
     try {
-      products = await api('/products?all=1');
+      const [productItems, brandItems] = await Promise.all([api('/products?all=1'), api('/brands?all=1')]);
+      products = productItems;
+      brandItems.forEach(brand => brandNames.set(brand.id, brand.name));
       render();
     } catch (error) {
       empty.hidden = false;
@@ -199,6 +203,7 @@
     const fields = {
       id: document.querySelector('#product-id'), name: document.querySelector('#product-name'),
       type: document.querySelector('#product-type'), image: document.querySelector('#product-image'),
+      brand: document.querySelector('#product-brand'),
       active: document.querySelector('#product-active'), es: document.querySelector('#description-es'),
       ca: document.querySelector('#description-ca'), en: document.querySelector('#description-en'),
       de: document.querySelector('#description-de')
@@ -223,6 +228,17 @@
       previewWrap.hidden = !currentImage;
     };
 
+    try {
+      const brands = await api('/brands?all=1');
+      brands.sort((a, b) => a.name.localeCompare(b.name, 'es')).forEach(brand => {
+        const option = el('option', '', brand.name);
+        option.value = brand.id;
+        fields.brand.append(option);
+      });
+    } catch (error) {
+      setStatus('No se pudieron cargar las marcas. Puedes continuar sin asignar una.', true);
+    }
+
     if (id) {
       try {
         const products = await api('/products?all=1');
@@ -231,6 +247,7 @@
         fields.id.value = existing.id;
         fields.name.value = existing.name || '';
         fields.type.value = existing.type || '';
+        fields.brand.value = existing.brandId || '';
         fields.active.checked = Boolean(existing.active);
         fields.es.value = existing.descriptions?.es || '';
         fields.ca.value = existing.descriptions?.ca || '';
@@ -286,7 +303,7 @@
       saveButton.disabled = true;
       setStatus('Guardando…');
       const product = {
-        name: fields.name.value.trim(), type: fields.type.value, active: fields.active.checked,
+        name: fields.name.value.trim(), type: fields.type.value, brandId: fields.brand.value || null, active: fields.active.checked,
         image: fields.image.files?.[0] ? currentImage : (imageWasRemoved ? '' : currentImage),
         descriptions: { es: fields.es.value.trim(), ca: fields.ca.value.trim(), en: fields.en.value.trim(), de: fields.de.value.trim() }
       };
