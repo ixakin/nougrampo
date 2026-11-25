@@ -7,6 +7,8 @@
     es: {
       all: 'Todos los tipos',
       filter: 'Filtrar por tipo',
+      allBrands: 'Todas las marcas',
+      filterBrand: 'Filtrar por marca',
       empty: 'No hay productos disponibles en este tipo.',
       unavailable: 'No se pudo cargar el catálogo. Inténtalo de nuevo más tarde.',
       previous: 'Anterior', next: 'Siguiente', page: 'Página', of: 'de',
@@ -16,6 +18,8 @@
     ca: {
       all: 'Tots els tipus',
       filter: 'Filtra per tipus',
+      allBrands: 'Totes les marques',
+      filterBrand: 'Filtra per marca',
       empty: 'No hi ha productes disponibles en aquest tipus.',
       unavailable: 'No s’ha pogut carregar el catàleg. Torna-ho a provar més tard.',
       previous: 'Anterior', next: 'Següent', page: 'Pàgina', of: 'de',
@@ -25,6 +29,8 @@
     en: {
       all: 'All types',
       filter: 'Filter by type',
+      allBrands: 'All brands',
+      filterBrand: 'Filter by brand',
       empty: 'No products are available in this category.',
       unavailable: 'The catalogue could not be loaded. Please try again later.',
       previous: 'Previous', next: 'Next', page: 'Page', of: 'of',
@@ -34,6 +40,8 @@
     de: {
       all: 'Alle Typen',
       filter: 'Nach Typ filtern',
+      allBrands: 'Alle Marken',
+      filterBrand: 'Nach Marke filtern',
       empty: 'In dieser Kategorie sind keine Produkte verfügbar.',
       unavailable: 'Der Katalog konnte nicht geladen werden. Bitte später erneut versuchen.',
       previous: 'Zurück', next: 'Weiter', page: 'Seite', of: 'von',
@@ -43,6 +51,8 @@
   }[locale] || {
     all: 'Todos los tipos',
     filter: 'Filtrar por tipo',
+    allBrands: 'Todas las marcas',
+    filterBrand: 'Filtrar por marca',
     empty: 'No hay productos disponibles en este tipo.',
     contact: 'CONSULTAR PRODUCTO →',
     categories: ['Griferías', 'Sanitarios y mamparas', 'Aire acondicionado', 'Aerotermia', 'Descalcificadores', 'Termos eléctricos y calentadores de gas', 'Productos para piscina', 'Outlet']
@@ -52,6 +62,25 @@
   const typeNames = Object.fromEntries(categoryKeys.map((key, index) => [key, copy.categories[index]]));
   const descriptionsByLocale = { es: 'es', ca: 'ca', en: 'en', de: 'de' };
   const filter = document.querySelector('#public-product-type-filter');
+  const filterGroup = filter.closest('.public-product-filter');
+  const typeLabel = filterGroup.querySelector('label[for="public-product-type-filter"]');
+  const typeFilterGroup = document.createElement('div');
+  typeFilterGroup.className = 'public-product-filter';
+  typeFilterGroup.append(typeLabel, filter);
+  const brandLabel = document.createElement('label');
+  brandLabel.htmlFor = 'public-product-brand-filter';
+  brandLabel.textContent = copy.filterBrand;
+  const brandFilter = document.createElement('select');
+  brandFilter.id = 'public-product-brand-filter';
+  const allBrands = document.createElement('option');
+  allBrands.value = '';
+  allBrands.textContent = copy.allBrands;
+  brandFilter.append(allBrands);
+  const brandFilterGroup = document.createElement('div');
+  brandFilterGroup.className = 'public-product-filter';
+  brandFilterGroup.append(brandLabel, brandFilter);
+  filterGroup.className = 'public-product-filters';
+  filterGroup.replaceChildren(typeFilterGroup, brandFilterGroup);
   const empty = document.querySelector('#public-products-empty');
   const pagination = document.querySelector('#public-products-pagination');
   const pageSize = 9;
@@ -67,6 +96,7 @@
   filter.append(types);
 
   let products = [];
+  let brands = [];
 
   function renderPagination(pageCount) {
     pagination.replaceChildren();
@@ -108,7 +138,11 @@
   function render() {
     list.replaceChildren();
     const selectedType = filter.value;
-    const visibleProducts = products.filter(product => !selectedType || product.type === selectedType);
+    const selectedBrand = brandFilter.value;
+    const visibleProducts = products.filter(product =>
+      (!selectedType || product.type === selectedType) &&
+      (!selectedBrand || product.brandId === selectedBrand)
+    );
     empty.hidden = visibleProducts.length > 0;
     empty.textContent = products.length ? copy.empty : copy.empty;
 
@@ -141,13 +175,28 @@
   }
 
   filter.addEventListener('change', () => { currentPage = 1; render(); });
-  fetch('/api/products')
-    .then(response => {
+  brandFilter.addEventListener('change', () => { currentPage = 1; render(); });
+  Promise.all([
+    fetch('/api/products').then(response => {
       if (!response.ok) throw new Error('No se pudo cargar el catálogo.');
       return response.json();
+    }),
+    fetch('/api/brands').then(response => {
+      if (!response.ok) throw new Error('No se pudieron cargar las marcas.');
+      return response.json();
     })
-    .then(items => {
+  ])
+    .then(([items, brandItems]) => {
       products = Array.isArray(items) ? items.filter(product => product && product.id && product.active) : [];
+      brands = Array.isArray(brandItems)
+        ? brandItems.filter(brand => brand && brand.id && brand.active).sort((a, b) => a.name.localeCompare(b.name, locale))
+        : [];
+      brands.forEach(brand => {
+        const option = document.createElement('option');
+        option.value = brand.id;
+        option.textContent = brand.name;
+        brandFilter.append(option);
+      });
       render();
     })
     .catch(() => {
